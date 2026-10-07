@@ -5,6 +5,20 @@ sürecini ve havayollarından gelen uçuş kayıtlarını dijitalleştiren, üre
 
 > **Önyüz:** React + TypeScript istemcisi [`frontend/`](frontend/README.md) klasöründe (rol bazlı ekranlar, QR doğrulama sayfası).
 
+### 🚀 Canlı demo
+
+**https://aerolicense-web.onrender.com** · Parola: `Demo123!` · Örnek hesaplar: `inspector@aerolicense.test`,
+`pilot1@aerolicense.test`, `egitim1@aerolicense.test` (tümü: [Test kullanıcıları](#test-kullanıcıları))
+
+> Ücretsiz sunucuda çalışır: bir süre kullanılmayınca uyur, **ilk açılış ~1 dakika** sürebilir. Giriş hata verirse
+> bekleyip tekrar deneyin. Demo veritabanı herkese ortaktır; yaptığınız değişiklikleri başkaları da görebilir.
+
+<!-- Ekran görüntüleri: docs/screenshots/ klasörüne ekleyip aşağıdaki satırları açın.
+| Başvuru akışı | Denetçi onayı | QR doğrulama |
+|---|---|---|
+| ![](docs/screenshots/basvuru.png) | ![](docs/screenshots/denetci.png) | ![](docs/screenshots/dogrulama.png) |
+-->
+
 > Tüm kurum, kişi, lisans ve uçuş verileri **kurgusaldır**. E-postalar IANA'nın test için ayırdığı `.test`
 > alan adında, kimlik numaraları `99999…` ile başlar. Havalimanı kodları gerçek ICAO formatındadır ama uçuşlar uydurmadır.
 
@@ -169,6 +183,16 @@ Cors__AllowedOrigins__0=http://localhost:5174 Verification__PublicBaseUrl=http:/
   dotnet run --project src/AeroLicense.Api --launch-profile http
 cd frontend && npx vite --port 5174 --strictPort
 ```
+
+### Bulutta yayın (Render)
+
+Kök dizindeki [`render.yaml`](render.yaml) üç servisi tanımlar: ücretsiz PostgreSQL, Docker ile .NET API ve
+statik React önyüzü. Render → **New → Blueprint** → bu repo seçilir; JWT ve belge imzalama anahtarlarını Render
+rastgele üretir, migration ve seed açılışta çalışır. Barındırma servislerinin verdiği `postgresql://` adresi
+uygulama açılışında Npgsql biçimine çevrilir (`ConnectionStrings.Normalize`).
+
+Servis adları Render'da benzersizdir; ad değişirse `render.yaml` içindeki CORS, doğrulama adresi ve
+`VITE_API_BASE_URL` değerleri de güncellenmelidir.
 
 ### Testler
 

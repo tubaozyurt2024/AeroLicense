@@ -1,0 +1,66 @@
+# Render Blueprint: tek tıkla canlı demo (PostgreSQL + .NET API + React önyüz).
+# Render → New → Blueprint → bu repoyu seçin. Ayrıntılar: README "Canlı demo" bölümü.
+#
+# Not: Render servis adları global olarak benzersizdir. Aşağıdaki adlardan biri alınmışsa adı değiştirin
+# ve aynı adı kullanan URL'leri (CORS, doğrulama adresi, VITE_API_BASE_URL) de güncelleyin.
+
+databases:
+  - name: aerolicense-db
+    plan: free
+    databaseName: aerolicense
+    user: aerolicense
+
+services:
+  - type: web
+    name: aerolicense-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./src/AeroLicense.Api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: PORT
+        value: "8080"
+      - key: ConnectionStrings__Default
+        fromDatabase:
+          name: aerolicense-db
+          property: connectionString
+      # İki anahtar Render tarafından rastgele üretilir ve birbirinden farklıdır.
+      - key: Jwt__SigningKey
+        generateValue: true
+      - key: DocumentSigning__Key
+        generateValue: true
+      # Demo ortamı: açılışta migration + kurgusal seed verisi. Parola README'de zaten paylaşılan demo parolasıdır.
+      - key: Database__MigrateOnStartup
+        value: "true"
+      - key: Seed__Enabled
+        value: "true"
+      - key: Seed__DemoPassword
+        value: Demo123!
+      - key: Cors__AllowedOrigins__0
+        value: https://aerolicense-web.onrender.com
+      - key: Verification__PublicBaseUrl
+        value: https://aerolicense-web.onrender.com/verify/
+
+  - type: web
+    name: aerolicense-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VITE_API_BASE_URL
+        value: https://aerolicense-api.onrender.com
+    routes:
+      # React Router: /verify/..., /applications gibi adresler doğrudan açıldığında index.html dönsün.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY

@@ -15,8 +15,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("Default")
-            ?? throw new InvalidOperationException("ConnectionStrings:Default tanımlı değil (ortam değişkeni veya user-secrets).");
+        var connectionString = ConnectionStrings.Normalize(configuration.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("ConnectionStrings:Default tanımlı değil (ortam değişkeni veya user-secrets)."));
 
         services.AddScoped<AuditLogInterceptor>();
         services.AddDbContext<AppDbContext>((sp, options) => options
