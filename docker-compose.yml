@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aerolicense
+      POSTGRES_USER: aerolicense
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?.env dosyasında POSTGRES_PASSWORD tanımlayın}
+    ports:
+      - "5433:5432" # host'taki yerel PostgreSQL 5432'yi kullandığı için 5433
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aerolicense -d aerolicense"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: src/AeroLicense.Api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy # veritabanı hazır olmadan API migration'a başlamasın
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development # prototip: Swagger + açılışta migration/seed açık
+      ConnectionStrings__Default: Host=db;Port=5432;Database=aerolicense;Username=aerolicense;Password=${POSTGRES_PASSWORD}
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:?.env dosyasında JWT_SIGNING_KEY tanımlayın}
+      Seed__DemoPassword: ${SEED_DEMO_PASSWORD:?.env dosyasında SEED_DEMO_PASSWORD tanımlayın}
+      DocumentSigning__Key: ${DOCUMENT_SIGNING_KEY:?.env dosyasında DOCUMENT_SIGNING_KEY tanımlayın}
+      Verification__PublicBaseUrl: http://localhost:8080/dogrula/
+
+volumes:
+  pgdata:

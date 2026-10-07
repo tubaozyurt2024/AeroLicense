@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AeroLicense.Api/AeroLicense.Api.csproj" />
+    <Project Path="src/AeroLicense.Application/AeroLicense.Application.csproj" />
+    <Project Path="src/AeroLicense.Domain/AeroLicense.Domain.csproj" />
+    <Project Path="src/AeroLicense.Infrastructure/AeroLicense.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AeroLicense.Tests/AeroLicense.Tests.csproj" />
+  </Folder>
+</Solution>

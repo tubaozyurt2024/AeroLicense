@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>AeroLicense – Belge Doğrulama</title>
+  <!--
+    Build adımı olmayan React: UMD paketleri CDN'den, SRI (integrity) hash'iyle. CDN'deki dosya değiştirilirse
+    tarayıcı çalıştırmaz. JSX yerine React.createElement (h) kullanılır, böylece Babel/Node gerekmez.
+    Script ve stil ayrı dosyada: CSP 'unsafe-inline' olmadan çalışabilsin (SecurityHeadersMiddleware).
+    Üretimde Vite ile derlenip aynı klasöre konur; API tarafında değişiklik gerekmez.
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"
+          integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"
+          integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/verify.css">
+</head>
+<body>
+<main id="root"></main>
+<script src="/verify.js"></script>
+</body>
+</html>
